@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "client", "client\client.csproj", "{DD41DD93-C077-4679-8A37-F81357BA427B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "client2", "client2\client2.csproj", "{06A33440-3EFA-411B-9BAD-7133B44DF30E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "common", "common\common.csproj", "{D0721629-2472-43A1-95E1-35CB91BA1881}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "server", "server\server.csproj", "{A2FB02F9-8401-4EC0-A989-63BC5FF6FD52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidgren.Network", "..\..\sources\SpaceWizards.Lidgren.Network\Lidgren.Network\Lidgren.Network.csproj", "{A77412F2-8B5F-4987-9CD4-C96D7E7BCBDB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD41DD93-C077-4679-8A37-F81357BA427B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD41DD93-C077-4679-8A37-F81357BA427B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD41DD93-C077-4679-8A37-F81357BA427B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD41DD93-C077-4679-8A37-F81357BA427B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06A33440-3EFA-411B-9BAD-7133B44DF30E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06A33440-3EFA-411B-9BAD-7133B44DF30E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06A33440-3EFA-411B-9BAD-7133B44DF30E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06A33440-3EFA-411B-9BAD-7133B44DF30E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0721629-2472-43A1-95E1-35CB91BA1881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0721629-2472-43A1-95E1-35CB91BA1881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0721629-2472-43A1-95E1-35CB91BA1881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0721629-2472-43A1-95E1-35CB91BA1881}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2FB02F9-8401-4EC0-A989-63BC5FF6FD52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2FB02F9-8401-4EC0-A989-63BC5FF6FD52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2FB02F9-8401-4EC0-A989-63BC5FF6FD52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2FB02F9-8401-4EC0-A989-63BC5FF6FD52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A77412F2-8B5F-4987-9CD4-C96D7E7BCBDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A77412F2-8B5F-4987-9CD4-C96D7E7BCBDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A77412F2-8B5F-4987-9CD4-C96D7E7BCBDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A77412F2-8B5F-4987-9CD4-C96D7E7BCBDB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
