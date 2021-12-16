@@ -15,26 +15,24 @@ namespace client
         {
             var localAddress = "127.0.0.1";
             var port = 5632;
-            Console.WriteLine("Enter the server address (Default: 127.0.0.1): ");
+            Console.WriteLine($"Enter the server address (Default: {localAddress}): ");
             var inLocalAddress = Console.ReadLine();
             if (!string.IsNullOrEmpty(inLocalAddress))
                 localAddress = inLocalAddress;
-            Console.WriteLine("Enter the port (Default: 5632): ");
+            Console.WriteLine($"Enter the port (Default: {port}): ");
             if (int.TryParse(Console.ReadLine(), out var inPort))
                 port = inPort;
             Console.WriteLine("Enter your username: ");
             var username = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(username))
-            {
                 username = "DEFAULT USERNAME";
-            }
-            
+
             Console.WriteLine("Enter a server password (Leave empty if no password is needed): ");
             var password = Console.ReadLine() ?? string.Empty;
             ClientNetHandler handler = new ClientNetHandler();
             handler.Connect(localAddress, port, username, password);
         }
-
+        
         
     }
 
@@ -46,15 +44,17 @@ namespace client
         public ClientNetHandler(){}
         public void Connect(string address, int port, string username, string serverPassword)
         {
-            var cfg = new NetPeerConfiguration("ogame");
+            var cfg = new NetPeerConfiguration("ogame")
+            {
+                AutoFlushSendQueue = true
+            };
             _netClient = new NetClient(cfg);
             
             // For username and password validation
-            var approval = _netClient.CreateMessage();
-            new ApprovalMessage(username, serverPassword).SetData(approval);
-            
-            _netClient.Connect(address, port, approval);
             _netClient.Start();
+            var approval = _netClient.CreateMessage();
+            _netClient.Connect(address, port, approval);
+            new ApprovalMessage(username, serverPassword).SetData(approval);
             _cliNetThread = new Thread(NetworkLoop);
             _cliNetThread.Start();
         }
@@ -84,7 +84,11 @@ namespace client
                     case NetIncomingMessageType.StatusChanged:
                         HandleStatusChangedMessage(message);
                         break;
+                    default:
+                        Console.WriteLine($"[Warning] Unhandled message type: {message.MessageType}");
+                        break;
                 }
+                _netClient.Recycle(message);
             }
             Console.WriteLine("[Networking] Shutdown");
         }

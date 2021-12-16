@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
+using Serilog;
 using server.entities;
 using server.helpers;
 using server.networking;
@@ -25,14 +26,17 @@ namespace server
 
         protected override void Initialize()
         {
+            // Turns the unnecessary window small as it cannot be removed 
             _graphics.PreferredBackBufferHeight = 10;
             _graphics.PreferredBackBufferWidth = 10;
             _graphics.ApplyChanges();
+            
             InitNetworkHandler();
             _playerManager = new PlayerManager();
             _command = new Thread(DoCommands);
             _command.Start();
             base.Initialize();
+            Log.Information("[MAIN] Initialisation complete");
         }
 
         protected override void LoadContent()
@@ -58,7 +62,7 @@ namespace server
         {
             var config = new NetPeerConfiguration("ogame") {Port = 5632, LocalAddress = new IPAddress(new byte[] {127, 0, 0, 1})};
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
-
+            config.AcceptIncomingConnections = true;
             var localAddress = CmdMsg.PrintAndInput("Enter the local address (Default: 127.0.0.1): ");
             if (!string.IsNullOrEmpty(localAddress))
                 config.LocalAddress = IPAddress.Parse(localAddress);
@@ -69,6 +73,7 @@ namespace server
             var password = CmdMsg.PrintAndInput("Enter a password (Leave empty if no password is needed): ") ?? string.Empty;
 
             _serverNetHandler = new ServerNetHandler(config, password);
+            _serverNetHandler.Run();
         }
 
         private void UpdateConnections()
@@ -87,10 +92,13 @@ namespace server
 
         private void DoCommands()
         {
+            Log.Information("Commands can now be entered.");
             var input = string.Empty;
             while (input != "quit")
             {
+                input = string.Empty;
                 input = Console.ReadLine();
+                
                 switch (input)
                 {
                     case "getplayers":
@@ -101,7 +109,7 @@ namespace server
                         break;
                 }
 
-                input = String.Empty;
+                
             }
             
         }
@@ -124,6 +132,7 @@ namespace server
         private void Quit()
         {
             _serverNetHandler.Shutdown();
+            Exit();
         }
     }
 }

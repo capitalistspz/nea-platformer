@@ -9,6 +9,9 @@
         <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641">
             <PrivateAssets>All</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="Serilog" Version="2.11.0-dev-01377" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+        <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00947" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\..\..\sources\SpaceWizards.Lidgren.Network\Lidgren.Network\Lidgren.Network.csproj" />
