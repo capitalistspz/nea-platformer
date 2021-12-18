@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using Lidgren.Network;
@@ -10,9 +11,10 @@ using server.networking;
 
 namespace server
 {
-    public class ServerGame : Game
+    public partial class ServerGame : Game
     {
         private GraphicsDeviceManager _graphics;
+        private bool _shutdown;
         private ServerNetHandler _serverNetHandler;
         private PlayerManager _playerManager;
         private Thread _command;
@@ -36,7 +38,7 @@ namespace server
             _command = new Thread(DoCommands);
             _command.Start();
             base.Initialize();
-            Log.Information("[MAIN] Initialisation complete");
+            Log.Information("Initialisation complete");
         }
 
         protected override void LoadContent()
@@ -62,6 +64,7 @@ namespace server
         {
             var config = new NetPeerConfiguration("ogame") {Port = 5632, LocalAddress = new IPAddress(new byte[] {127, 0, 0, 1})};
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+            //config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
             config.AcceptIncomingConnections = true;
             var localAddress = CmdMsg.PrintAndInput("Enter the local address (Default: 127.0.0.1): ");
             if (!string.IsNullOrEmpty(localAddress))
@@ -81,9 +84,11 @@ namespace server
             if (_serverNetHandler.RecentlyConnected.TryDequeue(out var playerConnection))
             {
                 var spawn = Vector2.Zero;
-                var newPlayer = new ServerPlayerEntity(spawn, (string)playerConnection.Tag, playerConnection);
+                var username = (string)playerConnection.Tag;
+                var newPlayer = new ServerPlayerEntity(spawn, username, playerConnection);
                 _playerManager.AddPlayer(newPlayer);
-            };
+            }
+
             if (_serverNetHandler.RecentlyDisconnected.TryDequeue(out playerConnection))
             {
                 _playerManager.RemovePlayer(playerConnection);
@@ -93,44 +98,34 @@ namespace server
         private void DoCommands()
         {
             Log.Information("Commands can now be entered.");
-            var input = string.Empty;
-            while (input != "quit")
+            while (!_shutdown)
             {
-                input = string.Empty;
-                input = Console.ReadLine();
-                
+                var input = Console.ReadLine();
+
                 switch (input)
                 {
+                    case "quit":
+                        Quit();
+                        break;
                     case "getplayers":
                         CommandGetPlayers();
                         break;
-                    case "kickall":
-                        CommandKickPlayers();
+                    case "kick":
+                        CommandKickPlayer();
                         break;
+                    case "kickall":
+                        CommandKickAllPlayers();
+                        break;
+                    
                 }
-
-                
             }
             
         }
-
-        private void CommandKickPlayers()
-        {
-            
-        }
-
-        private void CommandGetPlayers()
-        {
-            Console.WriteLine("Players: ");
-            var players = _playerManager.GetPlayers(_ => true);
-            foreach (var player in players)
-            {
-                Console.WriteLine($"{player.Connection}: {player.Name}");
-            }
-        }
+        
 
         private void Quit()
         {
+            _shutdown = true;
             _serverNetHandler.Shutdown();
             Exit();
         }

@@ -24,6 +24,7 @@ namespace common.entities
             var time = (float)(gameTime.ElapsedGameTime.TotalMilliseconds / 10);
             var oldPosition = GetPosition();
             var position = oldPosition + GetVelocity() * time; 
+            SetPosition(position);
             SetVelocity(GetVelocity() * 0.9f);
             _onGround = false;
             _jump = false;

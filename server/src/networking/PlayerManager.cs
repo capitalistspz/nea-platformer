@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Lidgren.Network;
 using MonoGame.Extended.Collections;
+using Serilog;
 using server.entities;
 
 namespace server.networking
@@ -18,9 +19,9 @@ namespace server.networking
 
         public void AddPlayer(ServerPlayerEntity playerEntity)
         {
+            Log.Information("Player {@Player} joined", playerEntity.Name);
             _players.Add(playerEntity);
         }
-
         public ServerPlayerEntity GetPlayer(NetConnection connection)
         {
             return _players[connection];
