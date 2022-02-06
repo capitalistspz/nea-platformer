@@ -19,7 +19,6 @@ namespace server.networking
 
         public void AddPlayer(ServerPlayerEntity playerEntity)
         {
-            Log.Information("Player {@Player} joined", playerEntity.Name);
             _players.Add(playerEntity);
         }
         public ServerPlayerEntity GetPlayer(NetConnection connection)

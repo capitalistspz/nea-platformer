@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading;
+using common.events;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using Serilog;
@@ -33,7 +34,9 @@ namespace server
             _graphics.PreferredBackBufferWidth = 10;
             _graphics.ApplyChanges();
             
+            SubscribeEvents();
             InitNetworkHandler();
+            
             _playerManager = new PlayerManager();
             _command = new Thread(DoCommands);
             _command.Start();
@@ -51,7 +54,8 @@ namespace server
 
         protected override void Update(GameTime gameTime)
         {
-            UpdateConnections();
+            //UpdateConnections();
+            GameEvents.InvokeEvents();
             base.Update(gameTime);
         }
 
@@ -117,6 +121,7 @@ namespace server
                         CommandKickAllPlayers();
                         break;
                     
+
                 }
             }
             
@@ -128,6 +133,27 @@ namespace server
             _shutdown = true;
             _serverNetHandler.Shutdown();
             Exit();
+        }
+
+        public void OnConnect(object sender, ConnectEventArgs args)
+        {
+            Log.Information("Player {@PlayerName} connected", args.Username);
+            var spawn = Vector2.Zero;
+            var newPlayer = new ServerPlayerEntity(spawn, args.Username, args.Connection);
+            _playerManager.AddPlayer(newPlayer);
+        }
+
+        public void OnDisconnect(object sender, DisconnectEventArgs args)
+        {
+            var username = _playerManager.GetPlayer(args.Connection).Name;
+            Log.Information("Player {@PlayerName} disconnected", username);
+            _playerManager.RemovePlayer(args.Connection);
+        }
+
+        public void SubscribeEvents()
+        {
+            GameEvents.Connect += OnConnect;
+            GameEvents.Disconnect += OnDisconnect;
         }
     }
 }

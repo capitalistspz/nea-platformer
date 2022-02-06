@@ -1,85 +1,37 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
+using common.networking;
 using Lidgren.Network;
 using MonoGame.Extended.Collections;
 using Serilog;
 
 namespace server.networking
 {
-    public partial class ServerNetHandler
+    public partial class ServerNetHandler : NetHandler<NetServer>
     {
-        private Thread _loopThread;
-        private NetServer _netServer;
-        private bool _shutdown;
         private string _password;
-        private Bag<string> _usernames;
-        // RemoteUniqueIdentifiers and Usernames
-        private Dictionary<long, string> _approved;
+        private Dictionary<NetConnection, string> _users;
+        
         public ConcurrentQueue<NetConnection> RecentlyConnected;
         public ConcurrentQueue<NetConnection> RecentlyDisconnected;
         
         public ServerNetHandler(NetPeerConfiguration netServerConfig, string password)
         {
-            _usernames = new Bag<string>();
-            _approved = new Dictionary<long, string>();
-            _netServer = new NetServer(netServerConfig);
-            _loopThread = new Thread(NetworkLoop) { Name = "Message Read Loop" };
-            _shutdown = false;
+            _users = new Dictionary<NetConnection, string>();
+            _NetPeer = new NetServer(netServerConfig);
+            _Shutdown = false;
             _password = password;
             RecentlyConnected = new ConcurrentQueue<NetConnection>();
             RecentlyDisconnected = new ConcurrentQueue<NetConnection>();
         }
 
-        public void Run()
+        public override void Shutdown()
         {
-            _netServer.Start();
-            _loopThread.Start();
+            RecentlyConnected.Clear();
+            RecentlyDisconnected.Clear();
+            _users.Clear();
+            base.Shutdown();
         }
-
-        public void Shutdown()
-        {
-            _netServer.Shutdown("Server shutdown.");
-            _shutdown = true;
-            _loopThread.Join();
-            Log.Debug("Message read loop shutdown.");
-        }
-        private void NetworkLoop()
-        {
-            while (!_shutdown)
-            {
-                var message = _netServer.ReadMessage();
-                if (message == null)
-                    continue;
-                Log.Debug("Message Received: {@MessageType}", message.MessageType);
-                switch (message.MessageType)
-                {
-                    case NetIncomingMessageType.Data:
-                        HandleDataMessage(message);
-                        break;
-                    case NetIncomingMessageType.VerboseDebugMessage:
-                        Log.Verbose("{@VerboseMessage}", message.ReadString());
-                        break;
-                    case NetIncomingMessageType.DebugMessage:
-                        Log.Debug("{@DebugMessage}", message.ReadString());
-                        break;
-                    case NetIncomingMessageType.WarningMessage:
-                        Log.Warning("{@WarningMessage}", message.ReadString());
-                        break;
-                    case NetIncomingMessageType.ErrorMessage:
-                        Log.Error("{@ErrorMessage}", message.ReadString());
-                        break;
-                    case NetIncomingMessageType.StatusChanged:
-                        HandleStatusChange(message);
-                        break;
-                    case NetIncomingMessageType.Error:
-                        Log.Error("|| {@Error}", message.ReadString());
-                        break;
-                    case NetIncomingMessageType.ConnectionApproval:
-                        HandleApproval(message);
-                        break;
-                }
-            }
-        }
+        
     }
 }

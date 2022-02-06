@@ -14,11 +14,11 @@ namespace server
             if (player != null)
             {
                 player.Connection.Disconnect("Kicked.");
-                Log.Information("Disconnected player {@Player}.", username);
+                Log.Information("Disconnected player {@Player}", username);
             }
             else
             {
-                Log.Information("Player {@Player} is not connected.", username);
+                Log.Information("Player {@Player} is not connected", username);
             }
         }
         
@@ -27,8 +27,8 @@ namespace server
         {
             // Gets list of all players
             var players = _playerManager.GetPlayers(_ => true);
-            var output = players.Aggregate("Players: ", (current, player) => current + $"{player.Name}@{player.Connection.RemoteEndPoint}");
-            Log.Information(output);
+            var output = players.Aggregate("", (current, player) => current + $"{player.Name}@{player.Connection.RemoteEndPoint}");
+            Log.Information("Players: {@Players}",output);
         }
 
         private void CommandKickAllPlayers()

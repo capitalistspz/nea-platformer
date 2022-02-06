@@ -94,19 +94,19 @@ namespace client
                 }
                 _netClient.Recycle(message);
             }
-            Log.Information("Networking shutdown.");
+            Log.Information("Networking shutdown");
         }
 
         private void HandleStatusChangedMessage(NetIncomingMessage message)
         {
             var status = (NetConnectionStatus)message.ReadByte();
             Log.Debug("Message type: {@Status}", status);
-            Log.Information(message.ReadString());
+            Log.Information("{@Message}",message.ReadString());
         }
 
         private void HandleDataMessage(NetIncomingMessage msg)
         {
-            var type = (S2CMessage.Type) msg.PeekByte();
+            var type = (S2CMessages.Type) msg.PeekByte();
         }
     }
 }

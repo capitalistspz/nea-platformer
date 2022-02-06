@@ -1,10 +1,11 @@
 using System;
+using common.entities;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
 
 namespace common.networking.S2C
 {
-    public abstract class S2CMessage
+    public static class S2CMessages
     {
         public enum Type
         {
@@ -35,16 +36,18 @@ namespace common.networking.S2C
         }
         public static class EntitySpawn
         {
-            public static void ReadEntitySpawnedMessage(NetIncomingMessage msg, out Guid id, out Vector2 position)
+            public static void Deconstruct(NetIncomingMessage msg, out Guid id, out Vector2 position, out EntityType entityType)
             {
                 _ = msg.ReadByte();
+                entityType = (EntityType)msg.ReadByte();
                 id = Guid.Parse(msg.ReadString());
                 position.X = msg.ReadFloat();
                 position.Y = msg.ReadFloat();
             }
-            public static void WriteEntityMotionMessage(NetOutgoingMessage msg, Guid id, Vector2 position)
+            public static void SetData(NetOutgoingMessage msg, Guid id, Vector2 position, EntityType entityType)
             {
                 msg.Write((byte)Type.EntityMotion);
+                msg.Write((byte)entityType);
                 msg.Write(id.ToString());
                 msg.Write(position.X);
                 msg.Write(position.Y);
