@@ -21,11 +21,16 @@ namespace common.entities
         }
         public void Update(GameTime gameTime)
         {
-            var time = (float)(gameTime.ElapsedGameTime.TotalMilliseconds / 10);
+            
+            var deltaTime = (float)(gameTime.ElapsedGameTime.TotalMilliseconds / 10);
             var oldPosition = GetPosition();
-            var position = oldPosition + GetVelocity() * time; 
+            var oldVelocity = GetVelocity();
+            var position = oldPosition + oldVelocity * deltaTime; 
+            
             SetPosition(position);
-            SetVelocity(GetVelocity() * 0.9f);
+            
+            var draggedVelocity = oldVelocity * 0.9f;
+            SetVelocity(draggedVelocity.LengthSquared() < 0.009f ? Vector2.Zero : draggedVelocity);
             _onGround = false;
             _jump = false;
         }
@@ -47,7 +52,11 @@ namespace common.entities
         public void Jump()
         {
             if (_onGround)
+            {
                 AddVelocity(new Size2(0, 0.7f));
+                _jump = true;
+            }
+                
         }
         
     }

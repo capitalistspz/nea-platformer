@@ -8,14 +8,14 @@ namespace client2.input
 {
     public enum InputAction
     {
+        Jump,
+        Attack1,
+        Attack2,
+        Block,
         Left,
         Right,
         Up,
         Down,
-        Jump,
-        Attack1,
-        Attack2,
-        Block
     }
 
     public abstract class GameInput<TInputElement>
@@ -67,6 +67,7 @@ namespace client2.input
             {
                 args.MovementDirection.Y = -1f;
             }
+            Owner.ApplyInput(args);
         }
         
     }
