@@ -10,15 +10,5 @@ namespace client2.entities
         {
             
         }
-
-        public ClientPlayerEntity(Vector2 position, Guid guid) : base(position, guid)
-        {
-            
-        }
-
-        public string GetCurrentSprite()
-        {
-            return "textures/entities/player";
-        }
     }
 }
