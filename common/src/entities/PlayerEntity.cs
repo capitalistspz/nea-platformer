@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using common.events;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
 namespace common.entities
@@ -18,8 +19,9 @@ namespace common.entities
         public readonly Vector2 MaxSpeed;
         public PlayerEntity(Vector2 position, Guid guid) : base(position, guid)
         {
+            _jump = false;
         }
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             
             var deltaTime = (float)(gameTime.ElapsedGameTime.TotalMilliseconds / 10);
@@ -34,7 +36,7 @@ namespace common.entities
             _onGround = false;
             _jump = false;
         }
-        
+
         public void ApplyMovement(MovementEventArgs args)
         {
             SetPosition(args.Position);

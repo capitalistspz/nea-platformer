@@ -59,7 +59,7 @@ namespace client2.input
             {
                 args.MovementDirection.X = 1f;
             }
-            else if (IsPressed(inputMap[InputAction.Down]))
+            if (IsPressed(inputMap[InputAction.Down]))
             {
                 args.MovementDirection.Y = 1f;
             }

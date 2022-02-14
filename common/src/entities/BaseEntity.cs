@@ -1,32 +1,40 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace common.entities
 {
     public abstract class BaseEntity
     {
-        private Vector2 Position;
-        private Vector2 Velocity;
+        private Vector2 _position;
+        private Vector2 _velocity;
+        private bool _visible;
         public readonly Guid Id;
 
         public BaseEntity(Vector2 position)
         {
-            Velocity = Vector2.Zero;
+            _velocity = Vector2.Zero;
             Id = Guid.NewGuid();
-            Position = position;
+            _position = position;
+            _visible = false;
         }
         public BaseEntity(Vector2 position, Guid guid)
         {
-            Velocity = Vector2.Zero;
+            _velocity = Vector2.Zero;
             Id = guid;
-            Position = position;
+            _position = position;
+            _visible = true;
         }
 
-        public void SetPosition(Vector2 position) => Position = position;
-        public Vector2 GetPosition() => Position;
-        public void SetVelocity(Vector2 velocity) => Position = velocity;
-        public Vector2 GetVelocity() => Velocity;
-        public void AddVelocity(Vector2 deltaVelocity) => Velocity += deltaVelocity;
+        public abstract void Update(GameTime gameTime);
         
+        public void SetPosition(Vector2 position) => _position = position;
+        public Vector2 GetPosition() => _position;
+        public void SetVelocity(Vector2 velocity) => _position = velocity;
+        public Vector2 GetVelocity() => _velocity;
+        public void AddVelocity(Vector2 deltaVelocity) => _velocity += deltaVelocity;
+        public void SetVisibility(bool shouldBeVisible) => _visible = shouldBeVisible;
+        public bool GetVisibility() => _visible;
+
     }
 }
