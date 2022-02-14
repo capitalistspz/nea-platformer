@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using client2.entities;
 using common.events;
@@ -21,49 +23,60 @@ namespace client2.input
     public abstract class GameInput<TInputElement>
     {
         public readonly ClientPlayerEntity Owner;
-        private Dictionary<InputAction, TInputElement> inputMap;
+        private Dictionary<InputAction, TInputElement> _inputMap;
 
         public GameInput(ClientPlayerEntity owner)
         {
+            _inputMap = new Dictionary<InputAction, TInputElement>();
             Owner = owner;
         }
         public abstract bool IsPressed(TInputElement key);
+
+        public void AssignInput(InputAction action, TInputElement key)
+        {
+            _inputMap[action] = key;
+        }
+        public void AssignInput(IEnumerable<KeyValuePair<InputAction, TInputElement>> mapping)
+        {
+            _inputMap = new Dictionary<InputAction,TInputElement> (mapping);
+        }
+        
         public abstract Vector2 GetAimDirection();
         public virtual void Update()
         {
-            InputEventArgs args = new InputEventArgs();
-            if (IsPressed(inputMap[InputAction.Jump]))
+            var args = new InputEventArgs();
+            if (IsPressed(_inputMap[InputAction.Jump]))
             {
                 args.Actions[0] = true;
             }
 
-            if (IsPressed(inputMap[InputAction.Attack1]))
+            if (IsPressed(_inputMap[InputAction.Attack1]))
             {
                 args.Actions[1] = true;
             }
 
-            if (IsPressed(inputMap[InputAction.Attack2]))
+            if (IsPressed(_inputMap[InputAction.Attack2]))
             {
                 args.Actions[2] = true;
             }
 
-            if (IsPressed(inputMap[InputAction.Block]))
+            if (IsPressed(_inputMap[InputAction.Block]))
             {
                 args.Actions[3] = true;
             }
-            if (IsPressed(inputMap[InputAction.Left]))
+            if (IsPressed(_inputMap[InputAction.Left]))
             {
                 args.MovementDirection.X = -1f;
             }
-            else if (IsPressed(inputMap[InputAction.Right]))
+            else if (IsPressed(_inputMap[InputAction.Right]))
             {
                 args.MovementDirection.X = 1f;
             }
-            if (IsPressed(inputMap[InputAction.Down]))
+            if (IsPressed(_inputMap[InputAction.Down]))
             {
                 args.MovementDirection.Y = 1f;
             }
-            else if (IsPressed(inputMap[InputAction.Up]))
+            else if (IsPressed(_inputMap[InputAction.Up]))
             {
                 args.MovementDirection.Y = -1f;
             }
