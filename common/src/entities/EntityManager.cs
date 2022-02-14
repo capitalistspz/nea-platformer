@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Collections;
 
@@ -47,7 +48,7 @@ namespace common.entities
         {
             return _entities[id];
         }
-
+        
         public PlayerEntity GetPlayer(Guid id)
         {
             var entity = _entities[id];
@@ -57,10 +58,13 @@ namespace common.entities
                 return null;
         }
 
-        public List<BaseEntity> GetEntity(EntitySearch search)
+        public IEnumerable<BaseEntity> FilterEntities(Predicate<BaseEntity> conditions)
         {
-            return search.Invoke(_entities.Values);
+            return _entities.Values.Where(conditions.Invoke);
         }
-        public delegate List<BaseEntity> EntitySearch(ICollection<BaseEntity> entities);
+        public IEnumerable<BaseEntity> GetAllEntities()
+        {
+            return _entities.Values;
+        }
     }
 }
