@@ -30,7 +30,7 @@ namespace common.events
     public class InputEventArgs : EventArgs
     {
         public NetConnection Connection;
-        public BitArray Actions;
-        public Vector2 MovementDirection;
+        public BitArray Actions = new(8);
+        public Vector2 MovementDirection = Vector2.Zero;
     }
 }
