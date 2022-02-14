@@ -12,6 +12,7 @@ namespace common.entities
         private bool _jump;
         private bool _onGround;
         public readonly string Name;
+        public static Texture2D PlayerTexture;
         public PlayerEntity(Vector2 position, string name) : 
             this(position, Guid.NewGuid()) 
             => (Name, MaxSpeed) = (name, new Size2(8, 8));
@@ -20,6 +21,7 @@ namespace common.entities
         public PlayerEntity(Vector2 position, Guid guid) : base(position, guid)
         {
             _jump = false;
+            SetVisibility(true);
         }
         public override void Update(GameTime gameTime)
         {
@@ -37,6 +39,10 @@ namespace common.entities
             _jump = false;
         }
 
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(PlayerTexture, GetPosition(), Color.White);
+        }
         public void ApplyMovement(MovementEventArgs args)
         {
             SetPosition(args.Position);
@@ -60,6 +66,6 @@ namespace common.entities
             }
                 
         }
-        
+
     }
 }
