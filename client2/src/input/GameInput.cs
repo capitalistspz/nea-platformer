@@ -20,11 +20,11 @@ namespace client2.input
         Down,
     }
 
-    public abstract class GameInput<TInputElement>
+    public abstract class GameInput<TInputElement> : IGameInput
     {
-        public readonly ClientPlayerEntity Owner;
         private Dictionary<InputAction, TInputElement> _inputMap;
-
+        public virtual Vector2 GetAimDirection { get; set; }
+        public ClientPlayerEntity Owner { get; set; }
         public GameInput(ClientPlayerEntity owner)
         {
             _inputMap = new Dictionary<InputAction, TInputElement>();
@@ -41,7 +41,6 @@ namespace client2.input
             _inputMap = new Dictionary<InputAction,TInputElement> (mapping);
         }
         
-        public abstract Vector2 GetAimDirection();
         public virtual void Update()
         {
             var args = new InputEventArgs();

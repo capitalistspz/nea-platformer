@@ -12,11 +12,14 @@ namespace client2.input
             return Keyboard.GetState().IsKeyDown(key);
         }
 
-        public override Vector2 GetAimDirection()
+        public override Vector2 GetAimDirection
         {
-            var posDiff = Mouse.GetState().Position.ToVector2() - Owner.GetPosition();
-            posDiff.Normalize();
-            return posDiff;
+            get
+            {
+                var posDiff = Mouse.GetState().Position.ToVector2() - Owner.GetPosition();
+                posDiff.Normalize();
+                return posDiff;
+            }
         }
 
         public KeyboardGameInput(ClientPlayerEntity owner) : base(owner)
