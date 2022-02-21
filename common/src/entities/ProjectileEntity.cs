@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace common.entities
 {
-    public class ProjectileEntity : BaseEntity
+    public abstract class ProjectileEntity : BaseEntity
     {
         public ProjectileEntity(Vector2 position) : base(position)
         {
