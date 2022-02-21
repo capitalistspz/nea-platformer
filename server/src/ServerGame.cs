@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Threading;
+using common;
 using common.events;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
@@ -12,7 +12,7 @@ using server.networking;
 
 namespace server
 {
-    public partial class ServerGame : Game
+    public partial class ServerGame : BaseGame
     {
         private GraphicsDeviceManager _graphics;
         private bool _shutdown;
@@ -22,7 +22,6 @@ namespace server
         public ServerGame()
         {
             _graphics = new GraphicsDeviceManager(this);
-            
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -44,17 +43,8 @@ namespace server
             Log.Information("Initialisation complete");
         }
 
-        protected override void LoadContent()
-        {
-            //_spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            //  use this.Content to load your game content here
-            base.LoadContent();
-        }
-
         protected override void Update(GameTime gameTime)
         {
-            //UpdateConnections();
             GameEvents.InvokeEvents();
             base.Update(gameTime);
         }
