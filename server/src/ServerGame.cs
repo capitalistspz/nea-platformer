@@ -14,15 +14,12 @@ namespace server
 {
     public partial class ServerGame : BaseGame
     {
-        private GraphicsDeviceManager _graphics;
         private bool _shutdown;
         private ServerNetHandler _serverNetHandler;
         private PlayerManager _playerManager;
         private Thread _command;
         public ServerGame()
         {
-            _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
 
