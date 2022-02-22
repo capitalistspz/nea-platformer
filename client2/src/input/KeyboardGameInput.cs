@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using client2.entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 
 namespace client2.input
 {
@@ -12,11 +13,12 @@ namespace client2.input
             return Keyboard.GetState().IsKeyDown(key);
         }
 
-        public override Vector2 GetAimDirection
+        public override Vector2 AimDirection
         {
             get
             {
-                var posDiff = Mouse.GetState().Position.ToVector2() - Owner.GetPosition();
+                var ownerBounds = (RectangleF) Owner.Bounds;
+                var posDiff = Mouse.GetState().Position - ownerBounds.Center;
                 posDiff.Normalize();
                 return posDiff;
             }
