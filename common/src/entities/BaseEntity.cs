@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Collisions;
+using Serilog;
 
 namespace common.entities
 {
@@ -14,25 +15,20 @@ namespace common.entities
         private bool _visible;
         private bool _removed;
         
+        protected World currentWorld;
         // Unique identifier for each entity
         public readonly Guid Id;
         
-        public BaseEntity(Vector2 position)
-        {
-            
-            _velocity = Vector2.Zero;
-            _visible = false;
-            _removed = false;
-            Id = Guid.NewGuid();
-
-        }
-        public BaseEntity(Vector2 position, Guid guid)
+        public BaseEntity(Vector2 position, World world)
+        : this(position, world, Guid.NewGuid())
+        { }
+        public BaseEntity(Vector2 position, World world, Guid guid)
         {
             _velocity = Vector2.Zero;
+            currentWorld = world;
             _visible = true;
             _removed = false;
             Id = guid;
-
         }
         // Physics, inputs etc
         public abstract void Update(GameTime gameTime);
@@ -49,7 +45,7 @@ namespace common.entities
         public void AddVelocity(Vector2 deltaVelocity) => _velocity += deltaVelocity;
         public void SetVisibility(bool shouldBeVisible) => _visible = shouldBeVisible;
         public bool IsVisible() => _visible;
-
+        public bool IsRemoved() => _removed;
         public abstract void OnCollision(CollisionEventArgs collisionInfo);
         public abstract IShapeF Bounds { get; }
     }
