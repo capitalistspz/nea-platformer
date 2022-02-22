@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Collisions;
+using Serilog;
 
 namespace common.entities
 {
@@ -12,24 +13,27 @@ namespace common.entities
     {
         private bool _jump;
         private bool _onGround;
+        private RectangleF _bounds;
         public readonly string Name;
         public readonly Vector2 MaxSpeed;
-
         public static Texture2D PlayerTexture;
         public override IShapeF Bounds { get; }
-        public PlayerEntity(Vector2 position, string name) : 
-            this(position, Guid.NewGuid()) 
-            => (Name, MaxSpeed) = (name, new Size2(8, 8));
 
-        public PlayerEntity(Vector2 position, Guid guid) : base(position, guid)
+        public PlayerEntity(Vector2 position, World world, string name) :
+            this(position, world, Guid.NewGuid())
         {
+            Name = name;
+        }
+
+        public PlayerEntity(Vector2 position, World world, Guid guid) : base(position, world, guid)
+        {
+            MaxSpeed = new Size2(8, 8);
             _jump = false;
             Bounds = new RectangleF(position, new Size2(128, 128));
             SetVisibility(true);
         }
         public override void Update(GameTime gameTime)
         {
-            
             var deltaTime = (float)(gameTime.ElapsedGameTime.TotalMilliseconds / 10);
             var oldPosition = GetPosition();
             var oldVelocity = GetVelocity();
@@ -42,7 +46,6 @@ namespace common.entities
             
             _onGround = false;
             _jump = false;
-            Console.WriteLine($"Name: {Name}\nPosition:  {position}\nVelocity: {GetVelocity()}");
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -61,9 +64,6 @@ namespace common.entities
                 //SetVelocity(velocity);
             }
         }
-
-    
-
         public void ApplyMovement(MovementEventArgs args)
         {
             SetPosition(args.Position);
@@ -77,12 +77,12 @@ namespace common.entities
                 Jump();
             SetVelocity(args.MovementDirection + GetVelocity());
         }
-
+        
         public void Jump()
         {
             if (_onGround)
             {
-                AddVelocity(new Size2(0, 0.7f));
+                AddVelocity(new Vector2(0, 0.7f));
                 _jump = true;
             }
                 
