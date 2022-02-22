@@ -26,7 +26,16 @@ namespace common.entities
             }
             foreach (var entity in _entities.Values)
             {
-                entity.Update(time);
+                if (entity.IsRemoved())
+                {
+                    RemoveEntity(entity);
+                }
+                else
+                {
+                    entity.Update(time);
+                }
+                
+                
             }
             while (_newEntities.Count > 0)
             {
