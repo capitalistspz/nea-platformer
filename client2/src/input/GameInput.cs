@@ -1,10 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using client2.entities;
 using common.events;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace client2.input
 {
@@ -22,60 +19,61 @@ namespace client2.input
 
     public abstract class GameInput<TInputElement> : IGameInput
     {
-        private Dictionary<InputAction, TInputElement> _inputMap;
-        public virtual Vector2 GetAimDirection { get; set; }
+        public Dictionary<InputAction, TInputElement> InputMapping { get; private set; }
+
+        public virtual Vector2 AimDirection { get; set; }
         public ClientPlayerEntity Owner { get; set; }
         public GameInput(ClientPlayerEntity owner)
         {
-            _inputMap = new Dictionary<InputAction, TInputElement>();
+            InputMapping = new Dictionary<InputAction, TInputElement>();
             Owner = owner;
         }
         public abstract bool IsPressed(TInputElement key);
 
         public void AssignInput(InputAction action, TInputElement key)
         {
-            _inputMap[action] = key;
+            InputMapping[action] = key;
         }
         public void AssignInput(IEnumerable<KeyValuePair<InputAction, TInputElement>> mapping)
         {
-            _inputMap = new Dictionary<InputAction,TInputElement> (mapping);
+            InputMapping = new Dictionary<InputAction,TInputElement> (mapping);
         }
         
         public virtual void Update()
         {
             var args = new InputEventArgs();
-            if (IsPressed(_inputMap[InputAction.Jump]))
+            if (IsPressed(InputMapping[InputAction.Jump]))
             {
                 args.Actions[0] = true;
             }
 
-            if (IsPressed(_inputMap[InputAction.Attack1]))
+            if (IsPressed(InputMapping[InputAction.Attack1]))
             {
                 args.Actions[1] = true;
             }
 
-            if (IsPressed(_inputMap[InputAction.Attack2]))
+            if (IsPressed(InputMapping[InputAction.Attack2]))
             {
                 args.Actions[2] = true;
             }
 
-            if (IsPressed(_inputMap[InputAction.Block]))
+            if (IsPressed(InputMapping[InputAction.Block]))
             {
                 args.Actions[3] = true;
             }
-            if (IsPressed(_inputMap[InputAction.Left]))
+            if (IsPressed(InputMapping[InputAction.Left]))
             {
                 args.MovementDirection.X = -1f;
             }
-            else if (IsPressed(_inputMap[InputAction.Right]))
+            else if (IsPressed(InputMapping[InputAction.Right]))
             {
                 args.MovementDirection.X = 1f;
             }
-            if (IsPressed(_inputMap[InputAction.Down]))
+            if (IsPressed(InputMapping[InputAction.Down]))
             {
                 args.MovementDirection.Y = 1f;
             }
-            else if (IsPressed(_inputMap[InputAction.Up]))
+            else if (IsPressed(InputMapping[InputAction.Up]))
             {
                 args.MovementDirection.Y = -1f;
             }

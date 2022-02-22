@@ -9,7 +9,7 @@ namespace client2.input
     public class ControllerGameInput : GameInput<Buttons>
     {
         private readonly int _controllerId;
-        public override Vector2 GetAimDirection => GamePad.GetState(_controllerId).ThumbSticks.Right;
+        public override Vector2 AimDirection => GamePad.GetState(_controllerId).ThumbSticks.Right;
        
         public override bool IsPressed(Buttons button)
         {
