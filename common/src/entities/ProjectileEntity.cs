@@ -19,6 +19,8 @@ namespace common.entities
         {
             var deltaTime = (float) (gameTime.ElapsedGameTime.TotalMilliseconds / 10);
             var position = GetPosition() + GetVelocity() * deltaTime;
+
+            SetPosition(position);
         }
     }
 }
