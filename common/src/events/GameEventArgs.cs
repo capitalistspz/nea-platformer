@@ -32,5 +32,10 @@ namespace common.events
         public NetConnection Connection;
         public BitArray Actions = new(8);
         public Vector2 MovementDirection = Vector2.Zero;
+        public Vector2 AimDirection = Vector2.Zero;
+        public override string ToString()
+        {
+            return $"Actions: {Actions}, MovementDirection: {MovementDirection}, AimDirection: {AimDirection}";
+        }
     }
 }
