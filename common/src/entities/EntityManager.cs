@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Collections;
+using Serilog;
 
 namespace common.entities
 {
@@ -47,11 +48,13 @@ namespace common.entities
         public void RemoveEntity(BaseEntity entity)
         {
             _oldEntities.Enqueue(entity);
+            Log.Debug("Entity of type {EntityType} removed", entity.GetType());
         }
 
         public void AddEntity(BaseEntity entity)
         {
             _newEntities.Enqueue(entity);
+            Log.Debug("Entity of type {EntityType} added with position {EntityPosition}", entity.GetType(), entity.GetPosition());
         }
         public BaseEntity GetEntity(Guid id)
         {
