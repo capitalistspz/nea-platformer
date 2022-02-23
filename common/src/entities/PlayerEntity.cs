@@ -13,7 +13,8 @@ namespace common.entities
     {
         private bool _jump;
         private bool _onGround;
-        private RectangleF _bounds;
+        private float _attackCooldown;
+        private float _timeSinceLastAttack;
         public readonly string Name;
         public readonly Vector2 MaxSpeed;
         public static Texture2D PlayerTexture;
@@ -29,6 +30,7 @@ namespace common.entities
         {
             MaxSpeed = new Size2(8, 8);
             _jump = false;
+            _attackCooldown = 100;
             Bounds = new RectangleF(position, new Size2(128, 128));
             SetVisibility(true);
         }
@@ -46,6 +48,7 @@ namespace common.entities
             
             _onGround = false;
             _jump = false;
+            _timeSinceLastAttack += deltaTime;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -75,9 +78,27 @@ namespace common.entities
             var actions = args.Actions;
             if (actions[0])
                 Jump();
+            if (actions[2] && _timeSinceLastAttack > _attackCooldown)
+            {
+                _timeSinceLastAttack = 0;
+                Shoot(args.AimDirection);
+            }
+                
             SetVelocity(args.MovementDirection + GetVelocity());
         }
         
+        // Fires a projectile in the direction aimed at
+        private void Shoot(Vector2 aimDirection)
+        {
+            var projectile = new SimpleProjectileEntity(((RectangleF) Bounds).Center, currentWorld)
+            {
+                DamageAmount = 1,
+                OwnerId = Id
+            };
+            projectile.SetVelocity(aimDirection * 8);
+            currentWorld.AddEntity(projectile);
+        }
+
         public void Jump()
         {
             if (_onGround)
