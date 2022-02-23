@@ -34,10 +34,10 @@ namespace client2.input
             [InputAction.Attack1] = Keys.F,
             [InputAction.Attack2] = Keys.G,
             [InputAction.Block] = Keys.Z,
-            [InputAction.Left] = Keys.Left,
-            [InputAction.Right] = Keys.Right,
-            [InputAction.Up] = Keys.Up,
-            [InputAction.Down] = Keys.Down
+            [InputAction.Left] = Keys.A,
+            [InputAction.Right] = Keys.D,
+            [InputAction.Up] = Keys.W,
+            [InputAction.Down] = Keys.S
                 
         };
         public static Dictionary<InputAction, Keys> BlankMapping => new(8)
