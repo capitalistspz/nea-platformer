@@ -3,27 +3,25 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Collisions;
+using Serilog;
 
 namespace common.entities
 {
     public class SimpleProjectileEntity : ProjectileEntity
     {
-        private CircleF _bounds;
         public Guid OwnerId;
         public int DamageAmount;
 
-        public override IShapeF Bounds => _bounds;
+        public override IShapeF Bounds { get; }
 
         public SimpleProjectileEntity(Vector2 position, World world) : base(position, world)
         {
-            _bounds.Center = position;
-            _bounds.Radius = 1f;
+            Bounds = new CircleF(position, 1f);
         }
 
         public SimpleProjectileEntity(Vector2 position, World world, Guid guid) : base(position, world, guid)
         {
-            _bounds.Center = position;
-            _bounds.Radius = 1f;
+            Bounds = new CircleF(position, 1f);
         }
 
         public override void OnCollision(CollisionEventArgs collisionInfo)
@@ -32,13 +30,13 @@ namespace common.entities
                 && player.Id != OwnerId)
             {
                 //player.Damage(this, DamageAmount);
-                RemoveNextUpdate();
+                currentWorld.RemoveEntity(this);
             }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawCircle(_bounds, 1, Color.Red);
+            spriteBatch.DrawCircle((CircleF)Bounds, 4, Color.Red, thickness: 10);
         }
 
     }
