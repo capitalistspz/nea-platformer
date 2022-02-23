@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using client2.entities;
 using common.events;
 using Microsoft.Xna.Framework;
+using Serilog;
 
 namespace client2.input
 {
@@ -19,14 +20,18 @@ namespace client2.input
 
     public abstract class GameInput<TInputElement> : IGameInput
     {
+        private long _lastUpdateTime;
+        private long _minTimeDelay;
         public Dictionary<InputAction, TInputElement> InputMapping { get; private set; }
-
+        
         public virtual Vector2 AimDirection { get; set; }
         public ClientPlayerEntity Owner { get; set; }
         public GameInput(ClientPlayerEntity owner)
         {
             InputMapping = new Dictionary<InputAction, TInputElement>();
             Owner = owner;
+            _lastUpdateTime = 0;
+            _minTimeDelay = 200000;
         }
         public abstract bool IsPressed(TInputElement key);
 
@@ -39,45 +44,62 @@ namespace client2.input
             InputMapping = new Dictionary<InputAction,TInputElement> (mapping);
         }
         
-        public virtual void Update()
+        public void Update(GameTime gameTime)
         {
+            if (gameTime.TotalGameTime.Ticks - _lastUpdateTime < _minTimeDelay)
+                return;
             var args = new InputEventArgs();
+            var updated = false;
             if (IsPressed(InputMapping[InputAction.Jump]))
             {
                 args.Actions[0] = true;
+                updated = true;
             }
 
             if (IsPressed(InputMapping[InputAction.Attack1]))
             {
                 args.Actions[1] = true;
+                updated = true;
             }
 
             if (IsPressed(InputMapping[InputAction.Attack2]))
             {
                 args.Actions[2] = true;
+                updated = true;
             }
 
             if (IsPressed(InputMapping[InputAction.Block]))
             {
                 args.Actions[3] = true;
+                updated = true;
             }
             if (IsPressed(InputMapping[InputAction.Left]))
             {
                 args.MovementDirection.X = -1f;
+                updated = true;
             }
             else if (IsPressed(InputMapping[InputAction.Right]))
             {
                 args.MovementDirection.X = 1f;
+                updated = true;
             }
             if (IsPressed(InputMapping[InputAction.Down]))
             {
                 args.MovementDirection.Y = 1f;
+                updated = true;
             }
             else if (IsPressed(InputMapping[InputAction.Up]))
             {
                 args.MovementDirection.Y = -1f;
+                updated = true;
             }
-            Owner.ApplyInput(args);
+            args.AimDirection = AimDirection;
+            if (updated)
+            {
+                Owner.ApplyInput(args);
+                _lastUpdateTime = gameTime.TotalGameTime.Ticks;
+            }
+            
         }
         
     }

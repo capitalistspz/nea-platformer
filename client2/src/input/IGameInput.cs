@@ -8,6 +8,6 @@ namespace client2.input
     {
         public Vector2 AimDirection { get; }
         public ClientPlayerEntity Owner { get; set; }
-        public void Update();
+        public void Update(GameTime gameTime);
     }
 }
