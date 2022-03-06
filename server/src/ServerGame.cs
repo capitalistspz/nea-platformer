@@ -76,7 +76,7 @@ namespace server
             {
                 var spawn = Vector2.Zero;
                 var username = (string)playerConnection.Tag;
-                var newPlayer = new ServerPlayerEntity(spawn, username, playerConnection);
+                var newPlayer = new ServerPlayerEntity(spawn,  _world, username, playerConnection);
                 _playerManager.AddPlayer(newPlayer);
             }
 
@@ -107,11 +107,8 @@ namespace server
                     case "kickall":
                         CommandKickAllPlayers();
                         break;
-                    
-
                 }
             }
-            
         }
         
 
@@ -126,7 +123,7 @@ namespace server
         {
             Log.Information("Player {@PlayerName} connected", args.Username);
             var spawn = Vector2.Zero;
-            var newPlayer = new ServerPlayerEntity(spawn, args.Username, args.Connection);
+            var newPlayer = new ServerPlayerEntity(spawn, _world, args.Username, args.Connection );
             _playerManager.AddPlayer(newPlayer);
         }
 
